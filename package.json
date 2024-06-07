@@ -10,7 +10,8 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
 	"dependencies": {
-		"family-chart": "latest"
+		"family-chart": "latest",
+		"firebase": "^10.12.2"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",
