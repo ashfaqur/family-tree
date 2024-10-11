@@ -1,5 +1,1 @@
-<script lang="ts">
-    import "./family-chart.css";
-</script>
-
 <slot />
