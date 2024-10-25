@@ -2,24 +2,37 @@
   import f3 from "family-chart";
   import { onMount, onDestroy } from "svelte";
   import data from "./initialdata.json";
+  import FamilyTreeForm from "./FamilyTreeForm.svelte";
 
   import type {
     CardDimensions,
     CardEditParam,
     CardNode,
-    CardData,
     DisplayFunction,
+    FamilyMember,
   } from "$lib/types/types";
 
-  function cardEditForm({ datum, postSubmit, store }) {
-    console.log("showCardEditForm", datum, postSubmit, store);
-    // postSubmit = (ps_props) => {
-    //   postSubmit(ps_props);
-    // };
-    // const el = document.querySelector("#form_modal"),
-    //   modal = M.Modal.getInstance(el),
-    //   edit = { el, open: () => modal.open(), close: () => modal.close() };
-    // Form({ datum, postSubmit, store, card_edit, card_display, edit });
+  let showForm = false;
+  let currentFamilyMember: FamilyMember = null;
+  let storeRef: any = null;
+
+  function cardEditForm(props: { datum: any; store: any; postSubmit: any }) {
+    currentFamilyMember = props.datum;
+    storeRef = props.store;
+    const postSubmitOriginal = props.postSubmit;
+
+    showForm = true;
+
+    // Return the form control functions
+    return {
+      close: () => {
+        showForm = false;
+      },
+      postSubmit: (props?: { delete?: boolean }) => {
+        showForm = false;
+        postSubmitOriginal(props);
+      },
+    };
   }
 
   function showAddRelative({ d }) {
@@ -94,6 +107,19 @@
 </script>
 
 <div id="FamilyChart" class="f3"></div>
+
+<FamilyTreeForm
+  bind:showModal={showForm}
+  familyMember={currentFamilyMember}
+  postSubmit={(props) => {
+    if (currentFamilyMember && storeRef) {
+      storeRef.update.tree();
+    }
+  }}
+  closeModal={() => {
+    showForm = false;
+  }}
+/>
 
 <style>
   #FamilyChart {

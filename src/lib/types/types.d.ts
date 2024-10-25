@@ -15,14 +15,34 @@ export interface CardEditParam {
   key: string;
 }
 
-export interface CardData {
+// Define the data structure for a family member
+export interface FamilyMemberData {
   firstname?: string;
   lastname?: string;
-  birthday?: string;
+  birthday?: string | number;
+  avatar?: string;
+  gender?: "M" | "F";
+}
+
+// Define relationships structure
+export interface FamilyRelations {
+  spouses?: string[];
+  children?: string[];
+  parents?: string[];
+  siblings?: string[];
+  [key: string]: string[] | undefined; // Allow for other potential relationship types
+}
+
+// Main FamilyMember type
+export interface FamilyMember {
+  id?: string;
+  data: FamilyMemberData;
+  rels: FamilyRelations;
+  to_add?: boolean; // Used when adding a new member
 }
 
 export interface CardNode {
-  data: CardData;
+  data: FamilyMemberData;
 }
 
 export interface DisplayFunction extends Function {
