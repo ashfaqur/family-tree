@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { FamilyMember } from "$lib/types/types";
 
+  import TextInput from "$lib/components/TextInput.svelte";
+
   export let familyMember: FamilyMember | null;
   export let postSubmit: (props?: { delete?: boolean }) => void;
   export let showModal = false;
@@ -96,13 +98,23 @@
           <label class="label" for="firstname">
             <span class="label-text font-medium">First Name</span>
           </label>
-          <input
+          <TextInput
+            id="firstname"
+            placeholder="Enter first name"
+            bind:value={formData.firstname}
+            isValid={(result) => {
+              if (result) {
+                console.log(result);
+              }
+            }}
+          />
+          <!-- <input
             type="text"
             id="firstname"
             bind:value={formData.firstname}
             placeholder="Enter first name"
             class="input input-bordered w-full"
-          />
+          /> -->
         </div>
 
         <!-- Last Name -->
