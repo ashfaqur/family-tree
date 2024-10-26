@@ -19,8 +19,22 @@
     gender: familyMember?.data?.gender || "M",
   };
 
+  function resetFormData() {
+    formData = {
+      firstname: familyMember?.data?.firstname || "",
+      lastname: familyMember?.data?.lastname || "",
+      birthday: familyMember?.data?.birthday || "",
+      avatar:
+        familyMember?.data?.avatar ||
+        "https://static8.depositphotos.com/1009634/988/v/950/depositphotos_9883921-stock-illustration-no-user-profile-picture.jpg",
+      gender: familyMember?.data?.gender || "M",
+    };
+  }
+
   function handleSubmit() {
+    console.log("handleSubmit");
     if (familyMember) {
+      console.log("handleSubmit triggered");
       familyMember.data = { ...familyMember.data, ...formData };
       showModal = false;
       postSubmit();
@@ -41,6 +55,7 @@
 </script>
 
 {#if showModal}
+  {resetFormData()}
   <div class="modal modal-open">
     <div class="modal-box relative max-w-xl">
       <!-- Close button -->
@@ -107,7 +122,7 @@
         </div>
 
         <div class="flex justify-between items-center">
-          {#if familyMember && !familyMember.to_add}
+          {#if familyMember}
             <button
               type="button"
               class="btn btn-error btn-sm"

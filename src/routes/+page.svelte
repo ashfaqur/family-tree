@@ -15,28 +15,27 @@
   let showForm = false;
   let currentFamilyMember: FamilyMember = null;
   let storeRef: any = null;
+  let postSubmitRef: (props?: { delete?: boolean }) => void;
 
-  function cardEditForm(props: { datum: any; store: any; postSubmit: any }) {
-    currentFamilyMember = props.datum;
-    storeRef = props.store;
-    const postSubmitOriginal = props.postSubmit;
-
+  function cardEditForm({
+    datum,
+    store,
+    postSubmit,
+  }: {
+    datum: FamilyMember;
+    store: any;
+    postSubmit: (props?: { delete?: boolean }) => void;
+  }) {
+    currentFamilyMember = datum;
+    storeRef = store;
     showForm = true;
-
-    // Return the form control functions
-    return {
-      close: () => {
-        showForm = false;
-      },
-      postSubmit: (props?: { delete?: boolean }) => {
-        showForm = false;
-        postSubmitOriginal(props);
-      },
-    };
+    postSubmitRef = postSubmit;
   }
 
-  function showAddRelative({ d }) {
-    console.log("showAddRelative", d);
+  function postSubmit(props?: { delete?: boolean }): void {
+    if (currentFamilyMember && storeRef) {
+      postSubmitRef(props);
+    }
   }
 
   function cardDisplay(): DisplayFunction[] {
@@ -71,7 +70,6 @@
   ];
 
   onMount(() => {
-    console.log(data);
     const cont: any = document.querySelector("#FamilyChart");
     const store: any = f3.createStore({
       data,
@@ -111,11 +109,7 @@
 <FamilyTreeForm
   bind:showModal={showForm}
   familyMember={currentFamilyMember}
-  postSubmit={(props) => {
-    if (currentFamilyMember && storeRef) {
-      storeRef.update.tree();
-    }
-  }}
+  {postSubmit}
   closeModal={() => {
     showForm = false;
   }}

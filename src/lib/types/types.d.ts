@@ -38,7 +38,6 @@ export interface FamilyMember {
   id?: string;
   data: FamilyMemberData;
   rels: FamilyRelations;
-  to_add?: boolean; // Used when adding a new member
 }
 
 export interface CardNode {
