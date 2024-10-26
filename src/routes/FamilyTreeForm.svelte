@@ -1,7 +1,8 @@
 <script lang="ts">
   import type { FamilyMember } from "$lib/types/types";
 
-  import TextInput from "$lib/components/TextInput.svelte";
+  import FormTextInput from "$lib/components/FormTextInput.svelte";
+  import RadioButtonGroup from "$lib/components/RadioButtonGroup.svelte";
 
   export let familyMember: FamilyMember | null;
   export let postSubmit: (props?: { delete?: boolean }) => void;
@@ -51,99 +52,33 @@
       </button>
 
       <form on:submit|preventDefault={handleSubmit} class="space-y-6">
-        <div class="flex justify-between items-center">
-          <h3 class="font-bold text-lg">Edit Family Member</h3>
-          {#if familyMember && !familyMember.to_add}
-            <button
-              type="button"
-              class="btn btn-error btn-sm"
-              on:click={handleDelete}
-            >
-              Delete
-            </button>
-          {/if}
-        </div>
+        <h3 class="font-bold text-lg">Edit Family Member</h3>
 
-        <!-- Gender Selection -->
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text font-medium">Gender</span>
-          </label>
-          <div class="flex gap-4">
-            <label class="label cursor-pointer">
-              <input
-                type="radio"
-                name="gender"
-                value="M"
-                bind:group={formData.gender}
-                class="radio radio-primary"
-              />
-              <span class="label-text ml-2">Male</span>
-            </label>
-            <label class="label cursor-pointer">
-              <input
-                type="radio"
-                name="gender"
-                value="F"
-                bind:group={formData.gender}
-                class="radio radio-primary"
-              />
-              <span class="label-text ml-2">Female</span>
-            </label>
-          </div>
-        </div>
+        <RadioButtonGroup gender={formData.gender} />
 
-        <!-- First Name -->
-        <div class="form-control">
-          <label class="label" for="firstname">
-            <span class="label-text font-medium">First Name</span>
-          </label>
-          <TextInput
-            id="firstname"
-            placeholder="Enter first name"
-            bind:value={formData.firstname}
-            isValid={(result) => {
-              if (result) {
-                console.log(result);
-              }
-            }}
-          />
-          <!-- <input
-            type="text"
-            id="firstname"
-            bind:value={formData.firstname}
-            placeholder="Enter first name"
-            class="input input-bordered w-full"
-          /> -->
-        </div>
-
-        <!-- Last Name -->
-        <div class="form-control">
-          <label class="label" for="lastname">
-            <span class="label-text font-medium">Last Name</span>
-          </label>
-          <input
-            type="text"
-            id="lastname"
-            bind:value={formData.lastname}
-            placeholder="Enter last name"
-            class="input input-bordered w-full"
-          />
-        </div>
-
-        <!-- Birthday -->
-        <div class="form-control">
-          <label class="label" for="birthday">
-            <span class="label-text font-medium">Birthday</span>
-          </label>
-          <input
-            type="text"
-            id="birthday"
-            bind:value={formData.birthday}
-            placeholder="Enter birthday"
-            class="input input-bordered w-full"
-          />
-        </div>
+        <FormTextInput
+          id="firstname"
+          label="First Name"
+          placeholder="Enter first name"
+          bind:value={formData.firstname}
+          validateMaxLength={true}
+          validateTextAllowedAlphabet={true}
+        />
+        <FormTextInput
+          id="lastname"
+          label="Last Name"
+          placeholder="Enter last name"
+          bind:value={formData.lastname}
+          validateMaxLength={true}
+          validateTextAllowedAlphabet={true}
+        />
+        <FormTextInput
+          id="birthday"
+          label="Birthday"
+          placeholder="DD/MM/YYYY"
+          bind:value={formData.birthday}
+          validateDateFormat={true}
+        />
 
         <!-- Avatar URL -->
         <div class="form-control">
@@ -171,12 +106,22 @@
           </div>
         </div>
 
-        <!-- Form Actions -->
-        <div class="modal-action">
-          <button type="button" class="btn btn-ghost" on:click={handleClose}>
-            Cancel
-          </button>
-          <button type="submit" class="btn btn-primary"> Save </button>
+        <div class="flex justify-between items-center">
+          {#if familyMember && !familyMember.to_add}
+            <button
+              type="button"
+              class="btn btn-error btn-sm"
+              on:click={handleDelete}
+            >
+              Delete
+            </button>
+          {/if}
+          <div class="modal-action">
+            <button type="button" class="btn btn-ghost" on:click={handleClose}>
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary"> Save </button>
+          </div>
         </div>
       </form>
     </div>

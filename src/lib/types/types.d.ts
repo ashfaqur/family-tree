@@ -19,7 +19,7 @@ export interface CardEditParam {
 export interface FamilyMemberData {
   firstname?: string;
   lastname?: string;
-  birthday?: string | number;
+  birthday?: string;
   avatar?: string;
   gender?: "M" | "F";
 }
