@@ -13,9 +13,6 @@
     firstname: familyMember?.data?.firstname || "",
     lastname: familyMember?.data?.lastname || "",
     birthday: familyMember?.data?.birthday || "",
-    avatar:
-      familyMember?.data?.avatar ||
-      "https://static8.depositphotos.com/1009634/988/v/950/depositphotos_9883921-stock-illustration-no-user-profile-picture.jpg",
     gender: familyMember?.data?.gender || "M",
   };
 
@@ -24,9 +21,6 @@
       firstname: familyMember?.data?.firstname || "",
       lastname: familyMember?.data?.lastname || "",
       birthday: familyMember?.data?.birthday || "",
-      avatar:
-        familyMember?.data?.avatar ||
-        "https://static8.depositphotos.com/1009634/988/v/950/depositphotos_9883921-stock-illustration-no-user-profile-picture.jpg",
       gender: familyMember?.data?.gender || "M",
     };
   }
@@ -100,33 +94,6 @@
           bind:value={formData.birthday}
           validateDateFormat={true}
         />
-
-        <!-- Avatar URL -->
-        <div class="form-control">
-          <label class="label" for="avatar">
-            <span class="label-text font-medium">Avatar URL</span>
-          </label>
-          <input
-            type="text"
-            id="avatar"
-            bind:value={formData.avatar}
-            placeholder="Enter avatar URL"
-            class="input input-bordered w-full"
-          />
-        </div>
-
-        <!-- Preview of current avatar -->
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text font-medium">Avatar Preview</span>
-          </label>
-          <div class="avatar">
-            <div class="w-24 rounded">
-              <img src={formData.avatar} alt="Avatar preview" />
-            </div>
-          </div>
-        </div>
-
         <div class="flex justify-between items-center">
           {#if familyMember}
             <button

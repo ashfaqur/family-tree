@@ -20,7 +20,6 @@ export interface FamilyMemberData {
   firstname?: string;
   lastname?: string;
   birthday?: string;
-  avatar?: string;
   gender?: "M" | "F";
 }
 
