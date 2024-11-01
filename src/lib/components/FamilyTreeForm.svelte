@@ -69,8 +69,10 @@
       <form on:submit|preventDefault={handleSubmit} class="space-y-6">
         <h3 class="font-bold text-lg">Edit Family Member</h3>
 
+        <!-- Gender Selection -->
         <RadioButtonGroup gender={formData.gender} />
 
+        <!-- First Name Input -->
         <FormTextInput
           id="firstname"
           label="First Name"
@@ -79,6 +81,8 @@
           validateMaxLength={true}
           validateTextAllowedAlphabet={true}
         />
+
+        <!-- Last Name Input -->
         <FormTextInput
           id="lastname"
           label="Last Name"
@@ -87,6 +91,8 @@
           validateMaxLength={true}
           validateTextAllowedAlphabet={true}
         />
+
+        <!-- Birthday Input -->
         <FormTextInput
           id="birthday"
           label="Birthday"
