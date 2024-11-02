@@ -1,5 +1,6 @@
 <script lang="ts">
   import data from "./initialdata.json";
+  // import data from "$lib/data/private.json";
   import Chart from "$lib/components/Chart.svelte";
 </script>
 
