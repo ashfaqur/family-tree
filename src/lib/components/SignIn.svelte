@@ -21,12 +21,9 @@
 
 <div class="flex justify-end mr-1">
   {#if $user}
-    <div class="flex space-x-2">
-      <h2 class="card-title text-green-500">Welcome, {$user.displayName}</h2>
-      <button class="btn btn-warning min-h-7 h-7" on:click={() => signOut(auth)}
-        >Sign out</button
-      >
-    </div>
+    <button class="btn btn-warning min-h-7 h-7" on:click={() => signOut(auth)}
+      >Sign out</button
+    >
   {:else}
     <button class="btn btn-primary min-h-7 h-7" on:click={signInWithGoogle}
       >Sign In</button
