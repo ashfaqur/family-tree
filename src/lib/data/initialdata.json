@@ -1,0 +1,84 @@
+[
+  {
+    "id": "1",
+    "data": {
+        "firstname": "John",
+        "lastname": "Smith",
+        "birthday": "23/03/2000",
+        "gender": "M",
+        "birth_place": "Jamnagar",
+        "death_date": ""
+    },
+    "rels": {
+        "father": "",
+        "mother": "",
+        "spouses": [
+            "2"
+        ],
+        "children": [
+            "3",
+            "4"
+        ]
+    },
+    "main": true
+  },
+  {
+    "id": "2",
+    "data": {
+        "firstname": "Jakie",
+        "lastname": "Smith",
+        "birthday": "01/03/2002",
+        "gender": "F",
+        "birth_place": "Johanabad",
+        "death_date": ""
+    },
+    "rels": {
+        "father": "",
+        "mother": "",
+        "spouses": [
+            "1"
+        ],
+        "children": [
+            "3",
+            "4"
+        ]
+    },
+    "main": false
+  },
+  {
+    "id": "3",
+    "data": {
+        "firstname": "Jobba",
+        "lastname": "Smith",
+        "birthday": "01/03/2010",
+        "gender": "M",
+        "birth_place": "Jobbabad",
+        "death_date": ""
+    },
+    "rels": {
+        "father": "1",
+        "mother": "2",
+        "spouses": [],
+        "children": []
+    },
+    "main": false
+  },
+  {
+    "id": "4",
+    "data": {
+        "firstname": "Julia",
+        "lastname": "Smith",
+        "birthday": "01/03/2015",
+        "gender": "F",
+        "birth_place": "Jobbabad",
+        "death_date": ""
+    },
+    "rels": {
+        "father": "1",
+        "mother": "2",
+        "spouses": [],
+        "children": []
+    },
+    "main": false
+  }
+]

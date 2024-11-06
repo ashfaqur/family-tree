@@ -21,11 +21,11 @@
 
 <div class="flex justify-end mr-1">
   {#if $user}
-    <button class="btn btn-warning min-h-7 h-7" on:click={() => signOut(auth)}
+    <button class="btn btn-warning min-h-10 h-10" on:click={() => signOut(auth)}
       >Sign out</button
     >
   {:else}
-    <button class="btn btn-primary min-h-7 h-7" on:click={signInWithGoogle}
+    <button class="btn btn-primary min-h-10 h-10" on:click={signInWithGoogle}
       >Sign In</button
     >
   {/if}

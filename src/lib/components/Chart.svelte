@@ -3,6 +3,7 @@
   import { onMount } from "svelte";
   import FamilyTreeForm from "$lib/components/FamilyTreeForm.svelte";
   import "$lib/components/family-chart.css";
+  import type { Store } from "$lib/types/types";
 
   import type {
     CardDimensions,
@@ -15,20 +16,28 @@
   export let data: any;
   let showForm = false;
   let currentFamilyMember: FamilyMember = null;
-  let storeRef: any = null;
+  let storeRef: Store = null;
   let postSubmitRef: (props?: { delete?: boolean }) => void;
 
   function cardEditForm({
     datum,
     store,
     postSubmit,
+    toAdd = false,
   }: {
     datum: FamilyMember;
-    store: any;
+    store: Store;
     postSubmit: (props?: { delete?: boolean }) => void;
+    toAdd: boolean;
   }) {
     currentFamilyMember = datum;
     storeRef = store;
+    if (toAdd) {
+      console.log("Adding new relative");
+    } else {
+      console.log(`Modifying existing member data ${datum.id}`);
+    }
+    console.log(currentFamilyMember);
     showForm = true;
     postSubmitRef = postSubmit;
   }
@@ -72,7 +81,7 @@
 
   onMount(() => {
     const cont: any = document.querySelector("#FamilyChart");
-    const store: any = f3.createStore({
+    const store: Store = f3.createStore({
       data,
       node_separation: 250,
       level_separation: 150,
@@ -86,7 +95,7 @@
       store,
       cont,
       card_dim,
-      cardEditForm,
+      cardEditForm: (props) => cardEditForm({ ...props, toAdd: true }),
       labels: { mother: "Add mother" },
     });
     const Card = f3.elements.Card({
@@ -110,6 +119,7 @@
 <FamilyTreeForm
   bind:showModal={showForm}
   familyMember={currentFamilyMember}
+  store={storeRef}
   {postSubmit}
   closeModal={() => {
     showForm = false;

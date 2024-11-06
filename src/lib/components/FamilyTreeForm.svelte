@@ -1,10 +1,11 @@
 <script lang="ts">
-  import type { FamilyMember } from "$lib/types/types";
+  import type { FamilyMember, Store } from "$lib/types/types";
 
   import FormTextInput from "$lib/components/FormTextInput.svelte";
   import RadioButtonGroup from "$lib/components/RadioButtonGroup.svelte";
 
   export let familyMember: FamilyMember | null;
+  export let store: Store;
   export let postSubmit: (props?: { delete?: boolean }) => void;
   export let showModal = false;
   export let closeModal = () => {};
@@ -31,6 +32,7 @@
       console.log("handleSubmit triggered");
       familyMember.data = { ...familyMember.data, ...formData };
       showModal = false;
+      console.log(familyMember);
       postSubmit();
       closeModal();
     }

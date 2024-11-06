@@ -1,13 +1,14 @@
 <script lang="ts">
-  import data from "./initialdata.json";
+  import data from "$lib/data/initialdata.json";
   // import data from "$lib/data/private.json";
   import Chart from "$lib/components/Chart.svelte";
-  import SignIn from "$lib/components/SignIn.svelte";
+  import Nav from "$lib/components/Nav.svelte";
+  import ProjectControl from "$lib/components/ProjectControl.svelte";
 </script>
 
-<div class="flex flex-col h-screen bg-[#3b5560]">
-  <SignIn />
-
+<div class="flex flex-col min-w-96 h-screen bg-[#3b5560]">
+  <Nav />
+  <ProjectControl />
   <div class="h-full w-auto">
     <Chart {data} />
   </div>

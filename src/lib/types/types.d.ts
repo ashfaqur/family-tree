@@ -28,8 +28,6 @@ export interface FamilyRelations {
   spouses?: string[];
   children?: string[];
   parents?: string[];
-  siblings?: string[];
-  [key: string]: string[] | undefined; // Allow for other potential relationship types
 }
 
 // Main FamilyMember type
@@ -37,6 +35,24 @@ export interface FamilyMember {
   id?: string;
   data: FamilyMemberData;
   rels: FamilyRelations;
+}
+
+export interface Store {
+  state: {
+    data: FamilyMember[];
+    node_separation: number;
+    level_separation: number;
+    tree: any;
+  };
+  getData: () => FamilyMember[];
+  getTree: () => any;
+  methods: Record<string, any>;
+  setOnUpdate: (callback: (props?: any) => void) => void;
+  update: {
+    tree: (props?: any) => void;
+    mainId: (props?: any) => void;
+    data: (props?: any) => void;
+  };
 }
 
 export interface CardNode {
