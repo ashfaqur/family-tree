@@ -4,24 +4,24 @@
   import CreateIcon from "$lib/components/svg/CreateIcon.svelte";
   import SaveIcon from "$lib/components/svg/SaveIcon.svelte";
 
-  let showMenu = true;
+  export let projects: string[] = ["Default", "New"];
 </script>
 
 {#if $user}
   <div class="flex flex-row justify-start items-center space-x-1 bg-base-100">
-    <ul class="menu menu-horizontal px-1">
-      <li>
-        <details class="min-w-36 w-52 z-30 border rounded-lg">
-          <summary>Parent</summary>
-          {#if showMenu}
-            <ul class="p-2">
-              <li class="w-52"><a>Submenu 1</a></li>
-              <li class="w-52"><a>Submenu 2</a></li>
-            </ul>
-          {/if}
-        </details>
-      </li>
-    </ul>
+    <h2>Projects:</h2>
+    <div class="dropdown">
+      <div tabindex="0" role="button" class="btn m-1">
+        {projects ? projects[0] : ""}
+      </div>
+      <ul
+        tabindex="0"
+        class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
+      >
+        <li><a>Item 1</a></li>
+        <li><a>Item 2</a></li>
+      </ul>
+    </div>
     <button class="btn min-h-10 h-10"
       ><div class="w-6 h-6"><SaveIcon /></div>
     </button>

@@ -33,34 +33,35 @@
   function handleSubmit() {
     console.log("handleSubmit");
     if (familyMember) {
-      console.log("handleSubmit triggered");
+      addParent();
       familyMember.data = { ...familyMember.data, ...formData };
-
-      if (
-        addRelationMember &&
-        (addRelationType === "son" || addRelationType === "daughter")
-      ) {
-        const parentId = addRelationMember.id;
-        const familyMembers: FamilyMember[] = store.getData();
-        const otherParent: FamilyMember = familyMembers.find(
-          (member: FamilyMember) => member.rels?.spouses?.includes(parentId)
-        );
-        if (otherParent) {
-          if (!otherParent.rels.children) {
-            otherParent.rels.children = [];
-          }
-          otherParent.rels.children.push(familyMember.id);
-          if (addRelationMember.data.gender === "M") {
-            familyMember.rels.mother = otherParent.id;
-          } else {
-            familyMember.rels.father = otherParent.id;
-          }
-        }
-      }
-      console.log(familyMember);
       showModal = false;
       postSubmit();
       closeModal();
+    }
+  }
+
+  function addParent() {
+    if (
+      addRelationMember &&
+      (addRelationType === "son" || addRelationType === "daughter")
+    ) {
+      const parentId = addRelationMember.id;
+      const familyMembers: FamilyMember[] = store.getData();
+      const otherParent: FamilyMember = familyMembers.find(
+        (member: FamilyMember) => member.rels?.spouses?.includes(parentId)
+      );
+      if (otherParent) {
+        if (!otherParent.rels.children) {
+          otherParent.rels.children = [];
+        }
+        otherParent.rels.children.push(familyMember.id);
+        if (addRelationMember.data.gender === "M") {
+          familyMember.rels.mother = otherParent.id;
+        } else {
+          familyMember.rels.father = otherParent.id;
+        }
+      }
     }
   }
 
