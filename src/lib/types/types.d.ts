@@ -27,7 +27,8 @@ export interface FamilyMemberData {
 export interface FamilyRelations {
   spouses?: string[];
   children?: string[];
-  parents?: string[];
+  father?: string;
+  mother?: string;
 }
 
 // Main FamilyMember type

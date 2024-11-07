@@ -16,6 +16,8 @@
   export let data: any;
   let showForm = false;
   let currentFamilyMember: FamilyMember = null;
+  let addRelationMember: FamilyMember = null;
+  let addRelationType: string = null;
   let storeRef: Store = null;
   let postSubmitRef: (props?: { delete?: boolean }) => void;
 
@@ -23,21 +25,37 @@
     datum,
     store,
     postSubmit,
-    toAdd = false,
   }: {
     datum: FamilyMember;
     store: Store;
     postSubmit: (props?: { delete?: boolean }) => void;
     toAdd: boolean;
   }) {
+    addRelationMember = null;
+    addRelationType = null;
     currentFamilyMember = datum;
     storeRef = store;
-    if (toAdd) {
-      console.log("Adding new relative");
-    } else {
-      console.log(`Modifying existing member data ${datum.id}`);
-    }
-    console.log(currentFamilyMember);
+    showForm = true;
+    postSubmitRef = postSubmit;
+  }
+
+  function addForm({
+    datum,
+    store,
+    postSubmit,
+    rel_datum,
+    rel_type,
+  }: {
+    datum: FamilyMember;
+    store: Store;
+    postSubmit: (props?: { delete?: boolean }) => void;
+    rel_datum: FamilyMember;
+    rel_type: string;
+  }) {
+    currentFamilyMember = datum;
+    addRelationMember = rel_datum;
+    addRelationType = rel_type;
+    storeRef = store;
     showForm = true;
     postSubmitRef = postSubmit;
   }
@@ -46,6 +64,8 @@
     if (currentFamilyMember && storeRef) {
       postSubmitRef(props);
     }
+    addRelationMember = null;
+    addRelationType = null;
   }
 
   function cardDisplay(): DisplayFunction[] {
@@ -95,7 +115,7 @@
       store,
       cont,
       card_dim,
-      cardEditForm: (props) => cardEditForm({ ...props, toAdd: true }),
+      cardEditForm: (props) => addForm(props),
       labels: { mother: "Add mother" },
     });
     const Card = f3.elements.Card({
@@ -120,6 +140,8 @@
   bind:showModal={showForm}
   familyMember={currentFamilyMember}
   store={storeRef}
+  {addRelationMember}
+  {addRelationType}
   {postSubmit}
   closeModal={() => {
     showForm = false;

@@ -3,12 +3,15 @@
 
   import FormTextInput from "$lib/components/FormTextInput.svelte";
   import RadioButtonGroup from "$lib/components/RadioButtonGroup.svelte";
+  import { connectStorageEmulator } from "firebase/storage";
 
   export let familyMember: FamilyMember | null;
   export let store: Store;
   export let postSubmit: (props?: { delete?: boolean }) => void;
   export let showModal = false;
   export let closeModal = () => {};
+  export let addRelationMember: FamilyMember = null;
+  export let addRelationType: string = null;
 
   let formData = {
     firstname: familyMember?.data?.firstname || "",
@@ -24,6 +27,7 @@
       birthday: familyMember?.data?.birthday || "",
       gender: familyMember?.data?.gender || "M",
     };
+    console.log(`Add relation type: ${addRelationType}`);
   }
 
   function handleSubmit() {
@@ -31,8 +35,30 @@
     if (familyMember) {
       console.log("handleSubmit triggered");
       familyMember.data = { ...familyMember.data, ...formData };
-      showModal = false;
+
+      if (
+        addRelationMember &&
+        (addRelationType === "son" || addRelationType === "daughter")
+      ) {
+        const parentId = addRelationMember.id;
+        const familyMembers: FamilyMember[] = store.getData();
+        const otherParent: FamilyMember = familyMembers.find(
+          (member: FamilyMember) => member.rels?.spouses?.includes(parentId)
+        );
+        if (otherParent) {
+          if (!otherParent.rels.children) {
+            otherParent.rels.children = [];
+          }
+          otherParent.rels.children.push(familyMember.id);
+          if (addRelationMember.data.gender === "M") {
+            familyMember.rels.mother = otherParent.id;
+          } else {
+            familyMember.rels.father = otherParent.id;
+          }
+        }
+      }
       console.log(familyMember);
+      showModal = false;
       postSubmit();
       closeModal();
     }
