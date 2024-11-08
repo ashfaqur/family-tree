@@ -5,7 +5,7 @@
   import SaveIcon from "$lib/components/svg/SaveIcon.svelte";
   import { onMount } from "svelte";
 
-  export let projects: string[] = ["Default", "New"];
+  export let projects: string[] = ["Default"];
   export let selectedProject: string = "Default";
 
   let dropdownElement: HTMLElement;
