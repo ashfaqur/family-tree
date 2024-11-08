@@ -61,16 +61,20 @@
   });
 </script>
 
-<div class="flex justify-end mr-1">
+<div class="flex justify-end ml-3 mr-1">
   {#if $user}
-    <button class="btn btn-warning min-h-10 h-10" on:click={() => signOut(auth)}
+    <button
+      class="btn btn-warning min-h-10 h-10 min-w-28"
+      on:click={() => signOut(auth)}
       ><div class="w-4 h-4 fill-blue-400">
         <GoogleIcon />
       </div>
       Sign out</button
     >
   {:else}
-    <button class="btn btn-primary min-h-10 h-10" on:click={signInWithGoogle}
+    <button
+      class="btn btn-primary min-h-10 h-10 min-w-28"
+      on:click={signInWithGoogle}
       ><div class="w-4 h-4 fill-blue-400">
         <GoogleIcon />
       </div>

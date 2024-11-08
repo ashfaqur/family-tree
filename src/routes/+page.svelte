@@ -6,7 +6,7 @@
   import ProjectControl from "$lib/components/ProjectControl.svelte";
 </script>
 
-<div class="flex flex-col min-w-96 h-screen bg-[#3b5560]">
+<div class="flex flex-col min-w-80 h-screen bg-[#3b5560]">
   <Nav />
   <ProjectControl />
   <div class="h-full w-auto">
