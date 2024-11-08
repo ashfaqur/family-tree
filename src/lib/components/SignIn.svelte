@@ -9,6 +9,7 @@
   } from "firebase/auth";
   import { setDoc, doc } from "firebase/firestore";
   import { onMount } from "svelte";
+  import GoogleIcon from "$lib/components/svg/GoogleIcon.svelte";
 
   // Function to detect mobile browser
   function isMobile() {
@@ -63,11 +64,17 @@
 <div class="flex justify-end mr-1">
   {#if $user}
     <button class="btn btn-warning min-h-10 h-10" on:click={() => signOut(auth)}
-      >Sign out</button
+      ><div class="w-4 h-4 fill-blue-400">
+        <GoogleIcon />
+      </div>
+      Sign out</button
     >
   {:else}
     <button class="btn btn-primary min-h-10 h-10" on:click={signInWithGoogle}
-      >Sign In</button
+      ><div class="w-4 h-4 fill-blue-400">
+        <GoogleIcon />
+      </div>
+      Sign In</button
     >
   {/if}
 </div>
