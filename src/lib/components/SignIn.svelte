@@ -7,7 +7,7 @@
     getRedirectResult,
     signOut,
   } from "firebase/auth";
-  import { setDoc, doc } from "firebase/firestore";
+  import { getDoc, setDoc, doc } from "firebase/firestore";
   import { onMount } from "svelte";
   import GoogleIcon from "$lib/components/svg/GoogleIcon.svelte";
 
@@ -18,15 +18,32 @@
     );
   }
 
-  // Handle saving user data to Firestore
   async function saveUserToFirestore(user: any) {
-    await setDoc(doc(db, "users", user.uid), {
-      uid: user.uid,
-      displayName: user.displayName,
-      email: user.email,
-      photoURL: user.photoURL,
-    });
-    console.log(`User ${user.uid} added to Firestore`);
+    const userRef = doc(db, "users", user.uid);
+    const userDoc = await getDoc(userRef);
+
+    if (userDoc.exists()) {
+      // User exists, update only the necessary fields
+      await setDoc(
+        userRef,
+        {
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+        },
+        { merge: true }
+      );
+      console.log(`User ${user.uid} updated in Firestore`);
+    } else {
+      // User does not exist, create a new document
+      await setDoc(userRef, {
+        uid: user.uid,
+        displayName: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+      });
+      console.log(`User ${user.uid} added to Firestore`);
+    }
   }
 
   // Handle sign in

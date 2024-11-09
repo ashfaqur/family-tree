@@ -1,3 +1,17 @@
+export interface UserData {
+  uid?: string;
+  displayName?: string;
+  email?: string;
+  photoURL?: string;
+  project?: string;
+}
+
+export interface ProjectData {
+  name?: string;
+  owner?: string;
+  viewer?: string[];
+}
+
 export interface CardDimensions {
   w: number;
   h: number;
