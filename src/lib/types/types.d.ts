@@ -10,6 +10,11 @@ export interface ProjectData {
   name?: string;
   owner?: string;
   viewer?: string[];
+  members?: FamilyMember[];
+}
+
+export interface ProjectFormData {
+  name: string;
 }
 
 export interface CardDimensions {
@@ -34,7 +39,7 @@ export interface FamilyMemberData {
   firstname?: string;
   lastname?: string;
   birthday?: string;
-  gender?: "M" | "F";
+  gender?: string;
 }
 
 // Define relationships structure
@@ -50,6 +55,8 @@ export interface FamilyMember {
   id?: string;
   data: FamilyMemberData;
   rels: FamilyRelations;
+  main?: boolean;
+  to_add?: boolean;
 }
 
 export interface Store {

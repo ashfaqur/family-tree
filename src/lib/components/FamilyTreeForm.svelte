@@ -3,7 +3,6 @@
 
   import FormTextInput from "$lib/components/FormTextInput.svelte";
   import RadioButtonGroup from "$lib/components/RadioButtonGroup.svelte";
-  import { connectStorageEmulator } from "firebase/storage";
 
   export let familyMember: FamilyMember | null;
   export let store: Store;

@@ -4,6 +4,7 @@
   import FamilyTreeForm from "$lib/components/FamilyTreeForm.svelte";
   import "$lib/components/family-chart.css";
   import type { Store } from "$lib/types/types";
+  import { chartData } from "$lib/familydata";
 
   import type {
     CardDimensions,
@@ -13,13 +14,21 @@
     FamilyMember,
   } from "$lib/types/types";
 
-  export let data: any;
+  let data: FamilyMember[] = $chartData;
   let showForm = false;
   let currentFamilyMember: FamilyMember = null;
   let addRelationMember: FamilyMember = null;
   let addRelationType: string = null;
   let storeRef: Store = null;
   let postSubmitRef: (props?: { delete?: boolean }) => void;
+
+  $: $chartData = data;
+
+  const store: Store = f3.createStore({
+    data,
+    node_separation: 250,
+    level_separation: 150,
+  });
 
   function cardEditForm({
     datum,
@@ -66,6 +75,7 @@
     }
     addRelationMember = null;
     addRelationType = null;
+    console.log(data);
   }
 
   function cardDisplay(): DisplayFunction[] {
@@ -101,11 +111,6 @@
 
   onMount(() => {
     const cont: any = document.querySelector("#FamilyChart");
-    const store: Store = f3.createStore({
-      data,
-      node_separation: 250,
-      level_separation: 150,
-    });
     const view: any = f3.d3AnimationView({
       store,
       cont,

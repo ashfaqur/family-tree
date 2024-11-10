@@ -1,6 +1,4 @@
 <script lang="ts">
-  import data from "$lib/data/initialdata.json";
-  // import data from "$lib/data/private.json";
   import Chart from "$lib/components/Chart.svelte";
   import Nav from "$lib/components/Nav.svelte";
   import ProjectControl from "$lib/components/ProjectControl.svelte";
@@ -10,6 +8,6 @@
   <Nav />
   <ProjectControl />
   <div class="h-full w-auto">
-    <Chart {data} />
+    <Chart />
   </div>
 </div>

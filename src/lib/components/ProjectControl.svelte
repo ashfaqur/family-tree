@@ -3,6 +3,7 @@
   import EditIcon from "$lib/components/svg/EditIcon.svelte";
   import CreateIcon from "$lib/components/svg/CreateIcon.svelte";
   import SaveIcon from "$lib/components/svg/SaveIcon.svelte";
+  import EditProject from "$lib/components/EditProject.svelte";
   import {
     doc,
     getDoc,
@@ -14,9 +15,22 @@
   import type { UserData, ProjectData } from "$lib/types/types";
   import { selectedProject } from "$lib/familydata";
 
-  export let projects: string[] = ["Default"];
+  export let projects: string[] = [];
 
   let dropdownElement: HTMLElement;
+  let showModal = false;
+  let editProject = false;
+
+  function openForm(edit: boolean) {
+    editProject = edit;
+    showModal = true;
+  }
+
+  function saveProject() {
+    if (!$selectedProject) {
+      openForm(false);
+    }
+  }
 
   $: if ($user) {
     setupProjects();
@@ -100,25 +114,29 @@
       >
         {$selectedProject ? $selectedProject : "Default"}
       </div>
-      <ul
-        tabindex="0"
-        class="dropdown-content menu bg-base-100 rounded-box z-30 w-52 p-2 shadow"
-      >
-        {#each projects as item}
-          <li>
-            <a on:click|preventDefault={() => selectItem(item)}>{item}</a>
-          </li>
-        {/each}
-      </ul>
+      {#if projects && projects.length > 0}
+        <ul
+          tabindex="0"
+          class="dropdown-content menu bg-base-100 rounded-box z-30 w-52 p-2 shadow"
+        >
+          {#each projects as item}
+            <li>
+              <a on:click|preventDefault={() => selectItem(item)}>{item}</a>
+            </li>
+          {/each}
+        </ul>
+      {/if}
     </div>
-    <button class="btn min-h-10 h-10"
+    <button class="btn min-h-10 h-10" on:click={() => saveProject()}
       ><div class="w-6 h-6"><SaveIcon /></div>
     </button>
-    <button class="btn min-h-10 h-10"
+    <button class="btn min-h-10 h-10" on:click={() => openForm(true)}
       ><div class="w-6 h-6"><EditIcon /></div>
     </button>
-    <button class="btn min-h-10 h-10"
+    <button class="btn min-h-10 h-10" on:click={() => openForm(false)}
       ><div class="w-6 h-6"><CreateIcon /></div>
     </button>
   </div>
+
+  <EditProject bind:showModal />
 {/if}
