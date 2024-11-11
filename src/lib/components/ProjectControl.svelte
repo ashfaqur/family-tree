@@ -6,6 +6,7 @@
   import CreateIcon from "$lib/components/svg/CreateIcon.svelte";
   import SaveIcon from "$lib/components/svg/SaveIcon.svelte";
   import EditProject from "$lib/components/EditProject.svelte";
+  import SaveProjectDialog from "$lib/components/SaveProjectDialog.svelte";
   import data from "$lib/data/initialdata.json";
   import {
     doc,
@@ -26,6 +27,7 @@
 
   let dropdownElement: HTMLElement;
   let showModal = false;
+  let showSaveModel = false;
   let editProject = false;
   let formData: ProjectFormData;
 
@@ -79,16 +81,14 @@
     console.log("Delete project");
   }
 
-  function saveProjectAction() {
+  function saveProjectAction() {}
+
+  function saveProject() {
     if (!$selectedProject) {
       openForm(false);
     } else {
-      saveProject();
+      showSaveModel = true;
     }
-  }
-
-  function saveProject() {
-    console.log("Save project");
   }
 
   async function selectItem(item: ProjectData) {
@@ -107,13 +107,17 @@
 
   async function setSelectedProject(item: ProjectData) {
     selectedProject.set(item);
-    const userRef = doc(db, "users", $user.uid);
-    await setDoc(userRef, {
-      project: item.uid,
-    });
-    let project: ProjectData = await getProjectData(item.uid);
-    if (project) {
-      chartData.set(project.members);
+    if (item) {
+      const userRef = doc(db, "users", $user.uid);
+      await setDoc(userRef, {
+        project: item.uid,
+      });
+      let project: ProjectData = await getProjectData(item.uid);
+      if (project) {
+        chartData.set(project.members);
+      }
+    } else {
+      chartData.set(data);
     }
   }
 
@@ -215,7 +219,7 @@
         </ul>
       {/if}
     </div>
-    <button class="btn min-h-10 h-10" on:click={() => saveProjectAction()}
+    <button class="btn min-h-10 h-10" on:click={() => saveProject()}
       ><div class="w-6 h-6"><SaveIcon /></div>
     </button>
     <button class="btn min-h-10 h-10" on:click={() => openForm(true)}
@@ -228,8 +232,15 @@
 
   <EditProject
     {formData}
+    {editProject}
     bind:showModal
     {handleSubmitAction}
     {handleDeleteAction}
+  />
+
+  <SaveProjectDialog
+    project={$selectedProject}
+    bind:showModal={showSaveModel}
+    saveProjectAction={saveProject}
   />
 {/if}
