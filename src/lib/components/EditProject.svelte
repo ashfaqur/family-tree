@@ -1,11 +1,13 @@
 <script lang="ts">
   import FormTextInput from "$lib/components/FormTextInput.svelte";
-  import { selectedProject } from "$lib/familydata";
   import type { ProjectFormData } from "$lib/types/types";
-  import { chartData } from "$lib/familydata";
 
+  export let formData: ProjectFormData;
   export let showModal = false;
   export let editProject = false;
+
+  export let handleSubmitAction: (formData: ProjectFormData) => void = () => {};
+  export let handleDeleteAction: () => void = () => {};
 
   function handleClose() {
     showModal = false;
@@ -13,30 +15,16 @@
 
   function handleSubmit() {
     showModal = false;
-    const projectName = formData.name;
-    const currentChartData = $chartData;
-    console.log("Project name: ", projectName);
-    console.log("Chart data:");
-    console.log(currentChartData);
+    handleSubmitAction(formData);
   }
 
   function handleDelete() {
     showModal = false;
-  }
-
-  let formData: ProjectFormData = {
-    name: editProject ? $selectedProject : null,
-  };
-
-  function resetFormData() {
-    formData = {
-      name: editProject ? $selectedProject : null,
-    };
+    handleDeleteAction();
   }
 </script>
 
 {#if showModal}
-  {resetFormData()}
   <div class="modal modal-open">
     <div class="modal-box relative max-w-xl">
       <!-- Close button -->

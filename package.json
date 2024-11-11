@@ -11,13 +11,15 @@
 	},
 	"dependencies": {
 		"family-chart": "latest",
-		"firebase": "^10.12.2"
+		"firebase": "^10.12.2",
+		"uuid": "^11.0.3"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/adapter-static": "^3.0.6",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
+		"@types/uuid": "^10.0.0",
 		"autoprefixer": "^10.4.16",
 		"daisyui": "^4.6.0",
 		"postcss": "^8.4.33",

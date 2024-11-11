@@ -7,9 +7,10 @@ export interface UserData {
 }
 
 export interface ProjectData {
+  uid?: string;
   name?: string;
   owner?: string;
-  viewer?: string[];
+  viewers?: string[];
   members?: FamilyMember[];
 }
 

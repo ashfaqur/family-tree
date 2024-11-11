@@ -1,5 +1,7 @@
 <script lang="ts">
   import { user, db } from "$lib/firebase";
+  import { v4 as uuidv4 } from "uuid";
+  import { selectedProject, chartData } from "$lib/familydata";
   import EditIcon from "$lib/components/svg/EditIcon.svelte";
   import CreateIcon from "$lib/components/svg/CreateIcon.svelte";
   import SaveIcon from "$lib/components/svg/SaveIcon.svelte";
@@ -7,33 +9,82 @@
   import {
     doc,
     getDoc,
+    setDoc,
     collection,
     getDocs,
     query,
     where,
   } from "firebase/firestore";
-  import type { UserData, ProjectData } from "$lib/types/types";
-  import { selectedProject } from "$lib/familydata";
+  import type {
+    UserData,
+    ProjectData,
+    ProjectFormData,
+  } from "$lib/types/types";
 
   export let projects: string[] = [];
 
   let dropdownElement: HTMLElement;
   let showModal = false;
   let editProject = false;
+  let formData: ProjectFormData;
+
+  $: formData = {
+    name: $selectedProject,
+  };
+
+  $: if ($user) {
+    setupProjects();
+  }
 
   function openForm(edit: boolean) {
     editProject = edit;
     showModal = true;
   }
 
-  function saveProject() {
-    if (!$selectedProject) {
-      openForm(false);
+  async function handleSubmitAction(formData: ProjectFormData) {
+    if ($user) {
+      try {
+        console.log("Handle submit action");
+        console.log(formData);
+        // Generate a Firestore-style ID
+        const projectsRef = collection(db, "projects");
+        const newProjectRef = doc(projectsRef);
+        const projectId = newProjectRef.id; // This gets the auto-generated ID
+
+        const projectData: ProjectData = {
+          uid: projectId,
+          name: formData.name,
+          owner: $user.uid,
+          viewers: [$user.email],
+          members: $chartData,
+        };
+
+        // Use the generated ID to create the document
+        await setDoc(newProjectRef, projectData);
+
+        console.log(`Project ${projectId} created successfully`);
+        return projectId;
+      } catch (error) {
+        console.error("Error creating project:", error);
+        throw error;
+      }
     }
   }
 
-  $: if ($user) {
-    setupProjects();
+  function handleDeleteAction() {
+    console.log("Delete project");
+  }
+
+  function saveProjectAction() {
+    if (!$selectedProject) {
+      openForm(false);
+    } else {
+      saveProject();
+    }
+  }
+
+  function saveProject() {
+    console.log("Save project");
   }
 
   async function setupProjects() {
@@ -44,21 +95,23 @@
         projects = userProjects.map((project) => project.name);
         if (userSelectedProject && projects.includes(userSelectedProject)) {
           selectedProject.set(userSelectedProject);
+        } else {
+          selectedProject.set(projects[0]);
         }
       }
     }
   }
 
-  async function getUserDefaultProject() {
+  async function getUserDefaultProject(): Promise<string> {
     console.log("getUserDefaultProject");
-    let userProject = null;
+    let userProject: string = null;
     const userDoc = await getDoc(doc(db, "users", $user.uid));
     if (userDoc.exists()) {
       const userData: UserData = userDoc.data();
       console.log("User document:", userData);
       if (userData) {
         console.log("User project:", userData.project);
-        return userData.project;
+        userProject = userData.project;
       } else {
         console.log("No project property found in user document");
       }
@@ -103,7 +156,6 @@
 </script>
 
 {#if $user}
-  <!-- {getUserDefaultProject()} -->
   <div class="flex flex-row justify-start items-center space-x-1 bg-base-100">
     <h2>Projects:</h2>
     <div class="dropdown" bind:this={dropdownElement}>
@@ -127,7 +179,7 @@
         </ul>
       {/if}
     </div>
-    <button class="btn min-h-10 h-10" on:click={() => saveProject()}
+    <button class="btn min-h-10 h-10" on:click={() => saveProjectAction()}
       ><div class="w-6 h-6"><SaveIcon /></div>
     </button>
     <button class="btn min-h-10 h-10" on:click={() => openForm(true)}
@@ -138,5 +190,10 @@
     </button>
   </div>
 
-  <EditProject bind:showModal />
+  <EditProject
+    {formData}
+    bind:showModal
+    {handleSubmitAction}
+    {handleDeleteAction}
+  />
 {/if}
