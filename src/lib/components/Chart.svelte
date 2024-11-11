@@ -1,6 +1,6 @@
 <script lang="ts">
   import f3 from "family-chart";
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import FamilyTreeForm from "$lib/components/FamilyTreeForm.svelte";
   import "$lib/components/family-chart.css";
   import type { Store } from "$lib/types/types";
@@ -109,7 +109,16 @@
     { type: "text", placeholder: "avatar", key: "avatar" },
   ];
 
+  // Subscribe to chartData store and update the chart whenever it changes
+  let unsubscribe: () => void;
+
   onMount(() => {
+    unsubscribe = chartData.subscribe((updatedData) => {
+      data = updatedData;
+      store.update.data(data);
+      store.update.tree({ initial: true });
+    });
+
     const cont: any = document.querySelector("#FamilyChart");
     const view: any = f3.d3AnimationView({
       store,
@@ -136,6 +145,10 @@
     view.setCard(Card);
     store.setOnUpdate((props: any) => view.update(props || {}));
     store.update.tree({ initial: true });
+  });
+  // Cleanup the subscription when the component is destroyed
+  onDestroy(() => {
+    unsubscribe;
   });
 </script>
 

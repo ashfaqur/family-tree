@@ -6,6 +6,7 @@
   import CreateIcon from "$lib/components/svg/CreateIcon.svelte";
   import SaveIcon from "$lib/components/svg/SaveIcon.svelte";
   import EditProject from "$lib/components/EditProject.svelte";
+  import data from "$lib/data/initialdata.json";
   import {
     doc,
     getDoc,
@@ -21,19 +22,22 @@
     ProjectFormData,
   } from "$lib/types/types";
 
-  export let projects: string[] = [];
+  export let projects: ProjectData[] = [];
 
   let dropdownElement: HTMLElement;
   let showModal = false;
   let editProject = false;
   let formData: ProjectFormData;
 
-  $: formData = {
-    name: $selectedProject,
-  };
-
+  $: if ($selectedProject) {
+    formData = {
+      name: $selectedProject.name,
+    };
+  }
   $: if ($user) {
     setupProjects();
+  } else {
+    chartData.set(data);
   }
 
   function openForm(edit: boolean) {
@@ -87,22 +91,55 @@
     console.log("Save project");
   }
 
+  async function selectItem(item: ProjectData) {
+    if ($user) {
+      // Close the dropdown by removing the focus
+      if (dropdownElement) {
+        const activeElement = document.activeElement as HTMLElement;
+        if (activeElement) {
+          activeElement.blur();
+        }
+        dropdownElement.blur();
+      }
+      setSelectedProject(item);
+    }
+  }
+
+  async function setSelectedProject(item: ProjectData) {
+    selectedProject.set(item);
+    const userRef = doc(db, "users", $user.uid);
+    await setDoc(userRef, {
+      project: item.uid,
+    });
+    let project: ProjectData = await getProjectData(item.uid);
+    if (project) {
+      chartData.set(project.members);
+    }
+  }
+
   async function setupProjects() {
     if ($user) {
       const userProjects = await getUserProjects();
       if (userProjects.length > 0) {
-        const userSelectedProject = await getUserDefaultProject();
-        projects = userProjects.map((project) => project.name);
-        if (userSelectedProject && projects.includes(userSelectedProject)) {
-          selectedProject.set(userSelectedProject);
+        const userSelectedProjectUid = await getUserDefaultProjectUid();
+        projects = userProjects;
+        if (userSelectedProjectUid) {
+          const selectedProjectItem = projects.find(
+            (project) => project.uid === userSelectedProjectUid
+          );
+          if (selectedProjectItem) {
+            setSelectedProject(selectedProjectItem);
+          } else {
+            setSelectedProject(projects[0]);
+          }
         } else {
-          selectedProject.set(projects[0]);
+          setSelectedProject(projects[0]);
         }
       }
     }
   }
 
-  async function getUserDefaultProject(): Promise<string> {
+  async function getUserDefaultProjectUid(): Promise<string> {
     console.log("getUserDefaultProject");
     let userProject: string = null;
     const userDoc = await getDoc(doc(db, "users", $user.uid));
@@ -142,16 +179,14 @@
     return userProjects;
   }
 
-  function selectItem(item: string) {
-    selectedProject.set(item);
-    // Close the dropdown by removing the focus
-    if (dropdownElement) {
-      const activeElement = document.activeElement as HTMLElement;
-      if (activeElement) {
-        activeElement.blur();
-      }
-      dropdownElement.blur();
+  async function getProjectData(projectUid: string): Promise<ProjectData> {
+    const projectRef = doc(db, "projects", projectUid);
+    const projectDoc = await getDoc(projectRef);
+    if (projectDoc.exists()) {
+      const projectData: ProjectData = projectDoc.data();
+      return projectData;
     }
+    return null;
   }
 </script>
 
@@ -164,7 +199,7 @@
         role="button"
         class="btn m-1 min-w-52 flex justify-start hover:bg-base-200"
       >
-        {$selectedProject ? $selectedProject : "Default"}
+        {$selectedProject ? $selectedProject.name : "Default"}
       </div>
       {#if projects && projects.length > 0}
         <ul
@@ -173,7 +208,8 @@
         >
           {#each projects as item}
             <li>
-              <a on:click|preventDefault={() => selectItem(item)}>{item}</a>
+              <a on:click|preventDefault={() => selectItem(item)}>{item.name}</a
+              >
             </li>
           {/each}
         </ul>
