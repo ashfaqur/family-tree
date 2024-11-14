@@ -8,16 +8,15 @@
   import EditProject from "$lib/components/EditProject.svelte";
   import SaveProjectDialog from "$lib/components/SaveProjectDialog.svelte";
   import data from "$lib/data/initialdata.json";
+  import { doc, setDoc, collection, deleteDoc } from "firebase/firestore";
   import {
-    doc,
-    getDoc,
-    setDoc,
-    collection,
-    getDocs,
-    query,
-    where,
-    deleteDoc,
-  } from "firebase/firestore";
+    setUserSelectedProjectId,
+    getUserSelectedProjectId,
+    getProjectData,
+    getUserProjects,
+    updateProject,
+    delteProject,
+  } from "$lib/familydata";
   import type {
     UserData,
     ProjectData,
@@ -46,6 +45,28 @@
   function openForm(edit: boolean) {
     editProject = edit;
     showModal = true;
+  }
+
+  function saveProject() {
+    if (!$selectedProject) {
+      openForm(false);
+    } else {
+      showSaveModel = true;
+    }
+  }
+
+  async function selectItem(item: ProjectData) {
+    if ($user) {
+      // Close the dropdown by removing the focus
+      if (dropdownElement) {
+        const activeElement = document.activeElement as HTMLElement;
+        if (activeElement) {
+          activeElement.blur();
+        }
+        dropdownElement.blur();
+      }
+      setSelectedProject(item);
+    }
   }
 
   async function handleSubmitAction(formData: ProjectFormData) {
@@ -92,58 +113,30 @@
   }
 
   async function handleDeleteAction() {
-    console.log("Delete project");
+    console.log("Delete project action");
     if ($user && $selectedProject) {
-      const projectUid = $selectedProject.uid;
-      console.log("Project UID:", projectUid);
-      const projectRef = doc(db, "projects", $selectedProject.uid);
-      await deleteDoc(projectRef);
-      console.log("Project deleted successfully");
+      delteProject($selectedProject.uid);
       setupProjects();
     }
   }
 
   async function saveProjectAction() {
+    console.log("Save project action");
     if ($selectedProject) {
-      const projectRef = doc(db, "projects", $selectedProject.uid);
       const projectData: ProjectData = {
         ...$selectedProject,
         members: $chartData,
       };
-      await setDoc(projectRef, projectData);
-    }
-  }
-
-  function saveProject() {
-    if (!$selectedProject) {
-      openForm(false);
+      updateProject(projectData);
     } else {
-      showSaveModel = true;
-    }
-  }
-
-  async function selectItem(item: ProjectData) {
-    if ($user) {
-      // Close the dropdown by removing the focus
-      if (dropdownElement) {
-        const activeElement = document.activeElement as HTMLElement;
-        if (activeElement) {
-          activeElement.blur();
-        }
-        dropdownElement.blur();
-      }
-      setSelectedProject(item);
+      console.error("Save project action ignored. No project selected");
     }
   }
 
   async function setSelectedProject(item: ProjectData) {
     selectedProject.set(item);
     if (item) {
-      console.log("Selected project id:", item.uid);
-      const userRef = doc(db, "users", $user.uid);
-      await setDoc(userRef, {
-        project: item.uid,
-      });
+      setUserSelectedProjectId($user.uid, item.uid);
       let project: ProjectData = await getProjectData(item.uid);
       if (project) {
         chartData.set(project.members);
@@ -155,9 +148,11 @@
 
   async function setupProjects() {
     if ($user) {
-      const userProjects = await getUserProjects();
+      const userProjects = await getUserProjects($user.email);
       if (userProjects.length > 0) {
-        const userSelectedProjectUid = await getUserDefaultProjectUid();
+        const userSelectedProjectUid = await getUserSelectedProjectId(
+          $user.uid
+        );
         projects = userProjects;
         if (userSelectedProjectUid) {
           const selectedProjectItem = projects.find(
@@ -173,56 +168,6 @@
         }
       }
     }
-  }
-
-  async function getUserDefaultProjectUid(): Promise<string> {
-    console.log("getUserDefaultProject");
-    let userProject: string = null;
-    const userDoc = await getDoc(doc(db, "users", $user.uid));
-    if (userDoc.exists()) {
-      const userData: UserData = userDoc.data();
-      console.log("User document:", userData);
-      if (userData) {
-        console.log("User project:", userData.project);
-        userProject = userData.project;
-      } else {
-        console.log("No project property found in user document");
-      }
-    }
-    return userProject;
-  }
-
-  async function getUserProjects(): Promise<ProjectData[]> {
-    let userProjects: ProjectData[] = [];
-    const userEmail = $user.email;
-    const projectsRef = collection(db, "projects");
-    const q = query(projectsRef, where("viewers", "array-contains", userEmail));
-    try {
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        userProjects.push(doc.data());
-      });
-    } catch (error) {
-      console.error("Error retrieving user projects:", error);
-    }
-
-    if (userProjects.length > 0) {
-      console.log("Projects containing user email:", userProjects);
-      // Do something with the retrieved projects
-    } else {
-      console.log("No projects found containing user email");
-    }
-    return userProjects;
-  }
-
-  async function getProjectData(projectUid: string): Promise<ProjectData> {
-    const projectRef = doc(db, "projects", projectUid);
-    const projectDoc = await getDoc(projectRef);
-    if (projectDoc.exists()) {
-      const projectData: ProjectData = projectDoc.data();
-      return projectData;
-    }
-    return null;
   }
 </script>
 
