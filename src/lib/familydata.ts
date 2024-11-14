@@ -65,9 +65,13 @@ export async function setUserSelectedProjectId(
   projectId: string
 ) {
   const userRef = doc(db, USERS_COLLECTION, userId);
-  await setDoc(userRef, {
-    project: projectId,
-  }).catch((error) => {
+  await setDoc(
+    userRef,
+    {
+      project: projectId,
+    },
+    { merge: true }
+  ).catch((error) => {
     console.error("Error setting user selected project: Details:", error);
   });
 }

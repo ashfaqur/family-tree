@@ -24,7 +24,9 @@
   let showModal = false;
   let showSaveModel = false;
   let editMode = false;
-  let formData: ProjectFormData;
+  let formData: ProjectFormData = {
+    name: "",
+  };
 
   $: if ($selectedProject) {
     formData = {
@@ -86,6 +88,8 @@
         } else {
           setSelectedProject(projects[0]);
         }
+      } else {
+        setSelectedProject(null);
       }
     }
   }
