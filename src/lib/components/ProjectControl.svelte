@@ -6,7 +6,7 @@
   import SaveIcon from "$lib/components/svg/SaveIcon.svelte";
   import EditProject from "$lib/components/EditProject.svelte";
   import SaveProjectDialog from "$lib/components/SaveProjectDialog.svelte";
-  import data from "$lib/data/initialdata.json";
+  import data from "$lib/data/data.json";
   import {
     setUserSelectedProjectId,
     getUserSelectedProjectId,
@@ -108,6 +108,7 @@
           name: formData.name,
           members: $chartData,
         };
+        console.log("Updated project data:", projectData);
         updateProject(projectData);
       } else {
         projectData = {
@@ -118,9 +119,9 @@
         };
         createProject(projectData);
         console.log("Newly created project data:", projectData);
-        setUserSelectedProjectId($user.uid, projectData.uid);
-        setupProjects();
       }
+      setUserSelectedProjectId($user.uid, projectData.uid);
+      setupProjects();
     } catch (error) {
       console.error("Error creating project:", error);
       throw error;
