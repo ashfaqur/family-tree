@@ -167,7 +167,7 @@
       <div
         tabindex="0"
         role="button"
-        class="btn m-1 min-w-52 flex justify-start hover:bg-base-200"
+        class="btn m-1 min-w-28 flex justify-start hover:bg-base-200"
       >
         {$selectedProject ? $selectedProject.name : "Default"}
       </div>
