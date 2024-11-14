@@ -21,7 +21,7 @@ export const auth = getAuth();
 export const storage = getStorage();
 
 /**
- * @returns a store with the current firebase user
+ * @returns A store that tracks the currently signed-in user
  */
 function userStore() {
   let unsubscribe: () => void;

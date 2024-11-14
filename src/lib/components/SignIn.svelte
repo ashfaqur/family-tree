@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { auth, user, db } from "$lib/firebase";
+  import { auth, user } from "$lib/firebase";
   import {
     GoogleAuthProvider,
     signInWithPopup,
@@ -7,7 +7,7 @@
     getRedirectResult,
     signOut,
   } from "firebase/auth";
-  import { getDoc, setDoc, doc } from "firebase/firestore";
+  import { saveUser } from "$lib/familydata";
   import { onMount } from "svelte";
   import GoogleIcon from "$lib/components/svg/GoogleIcon.svelte";
 
@@ -16,35 +16,6 @@
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent
     );
-  }
-
-  async function saveUserToFirestore(user: any) {
-    const userRef = doc(db, "users", user.uid);
-    const userDoc = await getDoc(userRef);
-
-    if (userDoc.exists()) {
-      // User exists, update only the necessary fields
-      await setDoc(
-        userRef,
-        {
-          uid: user.uid,
-          displayName: user.displayName,
-          email: user.email,
-          photoURL: user.photoURL,
-        },
-        { merge: true }
-      );
-      console.log(`User ${user.uid} updated in Firestore`);
-    } else {
-      // User does not exist, create a new document
-      await setDoc(userRef, {
-        uid: user.uid,
-        displayName: user.displayName,
-        email: user.email,
-        photoURL: user.photoURL,
-      });
-      console.log(`User ${user.uid} added to Firestore`);
-    }
   }
 
   // Handle sign in
@@ -58,7 +29,7 @@
       } else {
         // Use popup for desktop
         const result = await signInWithPopup(auth, provider);
-        await saveUserToFirestore(result.user);
+        await saveUser(result.user);
       }
     } catch (error) {
       console.error("Auth error:", error);
@@ -71,7 +42,7 @@
     try {
       const result = await getRedirectResult(auth);
       if (result?.user) {
-        await saveUserToFirestore(result.user);
+        await saveUser(result.user);
       }
     } catch (error) {
       console.error("Redirect result error:", error);
