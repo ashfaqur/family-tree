@@ -37,7 +37,7 @@
 
       <form on:submit|preventDefault={handleSubmit} class="space-y-6">
         <h3 class="font-bold text-lg">
-          {editProject ? "Edit" : "Add"} Project
+          {editProject ? "Edit" : "Create"} Project
         </h3>
 
         <!-- Project Name Input -->
@@ -64,7 +64,9 @@
             <button type="button" class="btn btn-ghost" on:click={handleClose}>
               Cancel
             </button>
-            <button type="submit" class="btn btn-primary"> Save </button>
+            <button type="submit" class="btn btn-primary">
+              {editProject ? "Save" : "Create"}
+            </button>
           </div>
         </div>
       </form>

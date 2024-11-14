@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { user, db } from "$lib/firebase";
-  import { v4 as uuidv4 } from "uuid";
+  import { user } from "$lib/firebase";
   import { selectedProject, chartData } from "$lib/familydata";
   import EditIcon from "$lib/components/svg/EditIcon.svelte";
   import CreateIcon from "$lib/components/svg/CreateIcon.svelte";
@@ -8,27 +7,23 @@
   import EditProject from "$lib/components/EditProject.svelte";
   import SaveProjectDialog from "$lib/components/SaveProjectDialog.svelte";
   import data from "$lib/data/initialdata.json";
-  import { doc, setDoc, collection, deleteDoc } from "firebase/firestore";
   import {
     setUserSelectedProjectId,
     getUserSelectedProjectId,
     getProjectData,
     getUserProjects,
+    createProject,
     updateProject,
     delteProject,
   } from "$lib/familydata";
-  import type {
-    UserData,
-    ProjectData,
-    ProjectFormData,
-  } from "$lib/types/types";
+  import type { ProjectData, ProjectFormData } from "$lib/types/types";
 
   export let projects: ProjectData[] = [];
 
   let dropdownElement: HTMLElement;
   let showModal = false;
   let showSaveModel = false;
-  let editProject = false;
+  let editMode = false;
   let formData: ProjectFormData;
 
   $: if ($selectedProject) {
@@ -37,13 +32,15 @@
     };
   }
   $: if ($user) {
+    // If user signs in then show load user projects
     setupProjects();
   } else {
+    // Otherwise load default demo data
     chartData.set(data);
   }
 
   function openForm(edit: boolean) {
-    editProject = edit;
+    editMode = edit;
     showModal = true;
   }
 
@@ -69,46 +66,60 @@
     }
   }
 
-  async function handleSubmitAction(formData: ProjectFormData) {
+  async function setupProjects() {
     if ($user) {
-      try {
-        console.log("Handle submit action");
-        console.log(formData);
-        let projectData: ProjectData;
-        if (editProject) {
-          const projectsRef = collection(db, "projects", $selectedProject.uid);
-          projectData = {
-            ...$selectedProject,
-            name: formData.name,
-            members: $chartData,
-          };
-          await setDoc(doc(projectsRef), projectData);
+      const userProjects = await getUserProjects($user.email);
+      if (userProjects.length > 0) {
+        const userSelectedProjectUid = await getUserSelectedProjectId(
+          $user.uid
+        );
+        projects = userProjects;
+        if (userSelectedProjectUid) {
+          const selectedProjectItem = projects.find(
+            (project) => project.uid === userSelectedProjectUid
+          );
+          if (selectedProjectItem) {
+            setSelectedProject(selectedProjectItem);
+          } else {
+            setSelectedProject(projects[0]);
+          }
         } else {
-          // Generate a Firestore-style ID
-          const projectsRef = collection(db, "projects");
-          const newProjectRef = doc(projectsRef);
-          const projectId = newProjectRef.id; // This gets the auto-generated ID
-
-          projectData = {
-            uid: projectId,
-            name: formData.name,
-            owner: $user.uid,
-            viewers: [$user.email],
-            members: data,
-          };
-          // Use the generated ID to create the document
-          await setDoc(newProjectRef, projectData);
-          const userRef = doc(db, "users", $user.uid);
-          await setDoc(userRef, {
-            project: projectData.uid,
-          });
-          setupProjects();
-          console.log(`Project ${projectId} created successfully`);
+          setSelectedProject(projects[0]);
         }
-      } catch (error) {
-        console.error("Error creating project:", error);
-        throw error;
       }
+    }
+  }
+
+  async function handleSubmitAction(formData: ProjectFormData) {
+    console.log("Handle submit action");
+    if (!$user) {
+      return;
+    }
+    console.log("Form data:", formData);
+    try {
+      let projectData: ProjectData;
+      if (editMode) {
+        projectData = {
+          ...$selectedProject,
+          name: formData.name,
+          members: $chartData,
+        };
+        updateProject(projectData);
+      } else {
+        projectData = {
+          name: formData.name,
+          owner: $user.uid,
+          viewers: [$user.email],
+          members: data,
+        };
+        createProject(projectData);
+        console.log("Newly created project data:", projectData);
+        setUserSelectedProjectId($user.uid, projectData.uid);
+        setupProjects();
+      }
+    } catch (error) {
+      console.error("Error creating project:", error);
+      throw error;
     }
   }
 
@@ -140,33 +151,11 @@
       let project: ProjectData = await getProjectData(item.uid);
       if (project) {
         chartData.set(project.members);
+      } else {
+        chartData.set(data);
       }
     } else {
       chartData.set(data);
-    }
-  }
-
-  async function setupProjects() {
-    if ($user) {
-      const userProjects = await getUserProjects($user.email);
-      if (userProjects.length > 0) {
-        const userSelectedProjectUid = await getUserSelectedProjectId(
-          $user.uid
-        );
-        projects = userProjects;
-        if (userSelectedProjectUid) {
-          const selectedProjectItem = projects.find(
-            (project) => project.uid === userSelectedProjectUid
-          );
-          if (selectedProjectItem) {
-            setSelectedProject(selectedProjectItem);
-          } else {
-            setSelectedProject(projects[0]);
-          }
-        } else {
-          setSelectedProject(projects[0]);
-        }
-      }
     }
   }
 </script>
@@ -209,7 +198,7 @@
 
   <EditProject
     {formData}
-    {editProject}
+    editProject={editMode}
     bind:showModal
     {handleSubmitAction}
     {handleDeleteAction}

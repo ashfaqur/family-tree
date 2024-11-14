@@ -174,12 +174,26 @@ export async function getUserProjects(
   return userProjects;
 }
 
+export async function createProject(projectData: ProjectData) {
+  if (!projectData) {
+    console.error("Unable to update project. No project data provided");
+    return;
+  }
+  const projectsRef = collection(db, PROJECTS_COLLECTION);
+  const newProjectRef = doc(projectsRef);
+  projectData.uid = newProjectRef.id; // This gets the auto-generated ID
+
+  await setDoc(newProjectRef, projectData).catch((error) => {
+    console.error("Error creating project. Details:", error);
+  });
+}
+
 export async function updateProject(projectData: ProjectData) {
   if (!projectData) {
     console.error("Unable to update project. No project data provided");
     return;
   }
-  const projectRef = doc(db, "projects", projectData.uid);
+  const projectRef = doc(db, PROJECTS_COLLECTION, projectData.uid);
   await setDoc(projectRef, projectData).catch((error) => {
     console.error("Error updating project. Details:", error);
   });
