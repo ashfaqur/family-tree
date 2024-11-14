@@ -16,6 +16,7 @@
     getDocs,
     query,
     where,
+    deleteDoc,
   } from "firebase/firestore";
   import type {
     UserData,
@@ -52,24 +53,37 @@
       try {
         console.log("Handle submit action");
         console.log(formData);
-        // Generate a Firestore-style ID
-        const projectsRef = collection(db, "projects");
-        const newProjectRef = doc(projectsRef);
-        const projectId = newProjectRef.id; // This gets the auto-generated ID
+        let projectData: ProjectData;
+        if (editProject) {
+          const projectsRef = collection(db, "projects", $selectedProject.uid);
+          projectData = {
+            ...$selectedProject,
+            name: formData.name,
+            members: $chartData,
+          };
+          await setDoc(doc(projectsRef), projectData);
+        } else {
+          // Generate a Firestore-style ID
+          const projectsRef = collection(db, "projects");
+          const newProjectRef = doc(projectsRef);
+          const projectId = newProjectRef.id; // This gets the auto-generated ID
 
-        const projectData: ProjectData = {
-          uid: projectId,
-          name: formData.name,
-          owner: $user.uid,
-          viewers: [$user.email],
-          members: $chartData,
-        };
-
-        // Use the generated ID to create the document
-        await setDoc(newProjectRef, projectData);
-
-        console.log(`Project ${projectId} created successfully`);
-        return projectId;
+          projectData = {
+            uid: projectId,
+            name: formData.name,
+            owner: $user.uid,
+            viewers: [$user.email],
+            members: data,
+          };
+          // Use the generated ID to create the document
+          await setDoc(newProjectRef, projectData);
+          const userRef = doc(db, "users", $user.uid);
+          await setDoc(userRef, {
+            project: projectData.uid,
+          });
+          setupProjects();
+          console.log(`Project ${projectId} created successfully`);
+        }
       } catch (error) {
         console.error("Error creating project:", error);
         throw error;
@@ -77,11 +91,28 @@
     }
   }
 
-  function handleDeleteAction() {
+  async function handleDeleteAction() {
     console.log("Delete project");
+    if ($user && $selectedProject) {
+      const projectUid = $selectedProject.uid;
+      console.log("Project UID:", projectUid);
+      const projectRef = doc(db, "projects", $selectedProject.uid);
+      await deleteDoc(projectRef);
+      console.log("Project deleted successfully");
+      setupProjects();
+    }
   }
 
-  function saveProjectAction() {}
+  async function saveProjectAction() {
+    if ($selectedProject) {
+      const projectRef = doc(db, "projects", $selectedProject.uid);
+      const projectData: ProjectData = {
+        ...$selectedProject,
+        members: $chartData,
+      };
+      await setDoc(projectRef, projectData);
+    }
+  }
 
   function saveProject() {
     if (!$selectedProject) {
@@ -108,6 +139,7 @@
   async function setSelectedProject(item: ProjectData) {
     selectedProject.set(item);
     if (item) {
+      console.log("Selected project id:", item.uid);
       const userRef = doc(db, "users", $user.uid);
       await setDoc(userRef, {
         project: item.uid,
@@ -241,6 +273,6 @@
   <SaveProjectDialog
     project={$selectedProject}
     bind:showModal={showSaveModel}
-    saveProjectAction={saveProject}
+    {saveProjectAction}
   />
 {/if}
