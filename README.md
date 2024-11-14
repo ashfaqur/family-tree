@@ -2,12 +2,12 @@
 
 A website for displaying family tree.
 
-![Alt Text](static/familytree3.gif)
+![Alt Text](static/familytree.gif)
+
+Create your own family tree.
+
+Signing will allow you to save your tree.
 
 ## Animated Tree
 
 The website uses the wonderful animated family chart library, created by https://github.com/donatso/family-chart, for visualizing the family tree.
-
-## Privacy
-
-Please note that the user data is stored unencrpyted in the cloud database. You can choose to host the website yourself for full privacy consideration. 
