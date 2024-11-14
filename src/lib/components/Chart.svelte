@@ -40,8 +40,8 @@
     postSubmit: (props?: { delete?: boolean }) => void;
     toAdd: boolean;
   }) {
-    addRelationMember = null;
-    addRelationType = null;
+    addRelationMember;
+    addRelationType;
     currentFamilyMember = datum;
     storeRef = store;
     showForm = true;

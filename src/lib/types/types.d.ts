@@ -40,6 +40,9 @@ export interface FamilyMemberData {
   firstname?: string;
   lastname?: string;
   birthday?: string;
+  bithplace?: string;
+  birth_place?: string;
+  death_date?: string;
   gender?: string;
 }
 

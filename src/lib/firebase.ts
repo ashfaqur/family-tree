@@ -12,6 +12,7 @@ const firebaseConfig = {
   storageBucket: "family-tree-data.appspot.com",
   messagingSenderId: "628491609504",
   appId: "1:628491609504:web:1af2394fa4dda5dd72f0c5",
+  measurementId: "G-1SLS14HXM7",
 };
 
 // Initialize Firebase
