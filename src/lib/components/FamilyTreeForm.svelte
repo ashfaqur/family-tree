@@ -19,6 +19,10 @@
     gender: familyMember?.data?.gender || "M",
   };
 
+  $: if (familyMember) {
+    resetFormData();
+  }
+
   function resetFormData() {
     formData = {
       firstname: familyMember?.data?.firstname || "",
@@ -77,7 +81,6 @@
 </script>
 
 {#if showModal}
-  {resetFormData()}
   <div class="modal modal-open">
     <div class="modal-box relative max-w-xl">
       <!-- Close button -->
@@ -92,7 +95,7 @@
         <h3 class="font-bold text-lg">Edit Family Member</h3>
 
         <!-- Gender Selection -->
-        <RadioButtonGroup gender={formData.gender} />
+        <RadioButtonGroup bind:gender={formData.gender} />
 
         <!-- First Name Input -->
         <FormTextInput
