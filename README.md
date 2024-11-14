@@ -1,38 +1,13 @@
-# create-svelte
+# Family Tree
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+A website for displaying family tree.
 
-## Creating a project
+![Alt Text](static/familytree3.gif)
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Animated Tree
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+The website uses the wonderful animated family chart library, created by https://github.com/donatso/family-chart, for visualizing the family tree.
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+## Privacy
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+Please note that the user data is stored unencrpyted in the cloud database. You can choose to host the website yourself for full privacy consideration. 
