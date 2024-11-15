@@ -13,7 +13,6 @@ import {
 import data from "$lib/data/initialdata.json";
 // import data from "$lib/data/private.json";
 import type { FamilyMember, ProjectData, UserData } from "./types/types";
-import type { User } from "firebase/auth";
 
 export const selectedProject = writable<ProjectData>(null);
 
@@ -21,6 +20,24 @@ export const chartData = writable<FamilyMember[]>(data);
 
 const USERS_COLLECTION = "users";
 const PROJECTS_COLLECTION = "projects";
+
+const defaultFamilyMember: FamilyMember = {
+  id: "1",
+  data: {
+    firstname: "No",
+    lastname: "Name",
+    birthday: "1/1/2000",
+    bithplace: "Nowhere",
+    gender: "M",
+  },
+  rels: {
+    children: [],
+    spouses: [],
+  },
+  main: true,
+};
+
+export const defaultMembers: FamilyMember[] = [defaultFamilyMember];
 
 /**
  * Saves or updates a user's data in the Firestore database.

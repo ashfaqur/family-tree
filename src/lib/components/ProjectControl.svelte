@@ -16,6 +16,7 @@
     createProject,
     updateProject,
     delteProject,
+    defaultMembers,
   } from "$lib/familydata";
   import type {
     FamilyMember,
@@ -24,19 +25,6 @@
   } from "$lib/types/types";
 
   export let projects: ProjectData[] = [];
-
-  const defaultFamilyMember: FamilyMember = {
-    id: "root",
-    data: {
-      firstname: "New",
-      lastname: "Tree",
-      birthday: "01/01/2000",
-      gender: "M",
-    },
-    rels: {},
-    main: true,
-  };
-  const defaultFamilyTree: FamilyMember[] = [defaultFamilyMember];
 
   let dropdownElement: HTMLElement;
   let showModal = false;
@@ -133,7 +121,7 @@
           name: formData.name,
           owner: $user.uid,
           viewers: [$user.email],
-          members: defaultFamilyTree,
+          members: defaultMembers,
         };
         await createProject(projectData);
         console.log("Newly created project data:", projectData);
