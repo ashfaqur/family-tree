@@ -6,7 +6,7 @@ A website for displaying family tree.
 
 Create your own family tree.
 
-Signing will allow you to save your tree.
+Signing in will allow you to save your tree.
 
 ## Animated Tree
 

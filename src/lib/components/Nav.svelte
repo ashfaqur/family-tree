@@ -1,17 +1,5 @@
 <script lang="ts">
-  import FamilyIcon from "$lib/components/svg/FamilyIcon.svelte";
-
   import SignIn from "$lib/components/SignIn.svelte";
-
-  let showMenu = false;
-
-  function toggleMenu() {
-    showMenu = !showMenu;
-  }
-
-  function closeMenu() {
-    showMenu = false;
-  }
 </script>
 
 <div class="navbar bg-base-100 border-b-2">
