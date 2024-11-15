@@ -8,6 +8,7 @@
   export let value: string = "";
   export let valid: boolean = true;
 
+  export let maxLength: number = 10;
   export let validateMaxLength: boolean = false;
   export let validateTextAllowedAlphabet: boolean = false;
   export let validateDateFormat: boolean = false;
@@ -33,6 +34,7 @@
         invalidMsg = "";
       }
     }}
+    {maxLength}
     {validateDateFormat}
     {validateMaxLength}
     {validateTextAllowedAlphabet}

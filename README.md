@@ -4,7 +4,7 @@ A website for displaying family tree.
 
 <https://family-tree-data.firebaseapp.com>
 
-![Alt Text](static/familytree.gif)
+![Alt Text](static/screenshot.png)
 
 Create your own family tree.
 

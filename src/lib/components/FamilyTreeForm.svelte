@@ -103,6 +103,7 @@
           label="First Name"
           placeholder="Enter first name"
           bind:value={formData.firstname}
+          maxLength={30}
           validateMaxLength={true}
           validateTextAllowedAlphabet={true}
         />
@@ -113,6 +114,7 @@
           label="Last Name"
           placeholder="Enter last name"
           bind:value={formData.lastname}
+          maxLength={30}
           validateMaxLength={true}
           validateTextAllowedAlphabet={true}
         />

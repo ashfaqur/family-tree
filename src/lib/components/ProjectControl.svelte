@@ -6,7 +6,8 @@
   import SaveIcon from "$lib/components/svg/SaveIcon.svelte";
   import EditProject from "$lib/components/EditProject.svelte";
   import SaveProjectDialog from "$lib/components/SaveProjectDialog.svelte";
-  import data from "$lib/data/data.json";
+  import data from "$lib/data/initialdata.json";
+  // import data from "$lib/data/private.json";
   import {
     setUserSelectedProjectId,
     getUserSelectedProjectId,
@@ -16,9 +17,26 @@
     updateProject,
     delteProject,
   } from "$lib/familydata";
-  import type { ProjectData, ProjectFormData } from "$lib/types/types";
+  import type {
+    FamilyMember,
+    ProjectData,
+    ProjectFormData,
+  } from "$lib/types/types";
 
   export let projects: ProjectData[] = [];
+
+  const defaultFamilyMember: FamilyMember = {
+    id: "root",
+    data: {
+      firstname: "New",
+      lastname: "Tree",
+      birthday: "01/01/2000",
+      gender: "M",
+    },
+    rels: {},
+    main: true,
+  };
+  const defaultFamilyTree: FamilyMember[] = [defaultFamilyMember];
 
   let dropdownElement: HTMLElement;
   let showModal = false;
@@ -109,18 +127,18 @@
           members: $chartData,
         };
         console.log("Updated project data:", projectData);
-        updateProject(projectData);
+        await updateProject(projectData);
       } else {
         projectData = {
           name: formData.name,
           owner: $user.uid,
           viewers: [$user.email],
-          members: data,
+          members: defaultFamilyTree,
         };
-        createProject(projectData);
+        await createProject(projectData);
         console.log("Newly created project data:", projectData);
       }
-      setUserSelectedProjectId($user.uid, projectData.uid);
+      await setUserSelectedProjectId($user.uid, projectData.uid);
       setupProjects();
     } catch (error) {
       console.error("Error creating project:", error);
@@ -131,7 +149,7 @@
   async function handleDeleteAction() {
     console.log("Delete project action");
     if ($user && $selectedProject) {
-      delteProject($selectedProject.uid);
+      await delteProject($selectedProject.uid);
       setupProjects();
     }
   }

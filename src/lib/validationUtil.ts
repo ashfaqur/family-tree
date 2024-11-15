@@ -61,7 +61,7 @@ export function validateTextDate(text: string): string {
     // Format: DAY/MONTH/YEAR
     [day, month, year] = text.split("/").map(Number);
   } else {
-    return "Invalid date format.";
+    return "Date format is DD/MM/YYYY";
   }
 
   const currentYear = new Date().getFullYear();

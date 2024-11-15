@@ -47,7 +47,6 @@
           placeholder="Enter project name"
           bind:value={formData.name}
           validateMaxLength={true}
-          validateTextAllowedAlphabet={true}
         />
 
         <div class="flex justify-between items-center">

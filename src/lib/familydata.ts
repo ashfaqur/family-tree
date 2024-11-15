@@ -10,7 +10,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import data from "$lib/data/data.json";
+import data from "$lib/data/initialdata.json";
 // import data from "$lib/data/private.json";
 import type { FamilyMember, ProjectData, UserData } from "./types/types";
 import type { User } from "firebase/auth";
