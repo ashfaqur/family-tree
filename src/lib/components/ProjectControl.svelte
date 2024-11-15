@@ -167,14 +167,14 @@
 
 {#if $user}
   <div class="flex flex-row justify-start items-center space-x-1 bg-base-100">
-    <h2>Projects:</h2>
+    <h2 class="ml-1">Project:</h2>
     <div class="dropdown" bind:this={dropdownElement}>
       <div
         tabindex="0"
         role="button"
         class="btn m-1 min-w-28 flex justify-start hover:bg-base-200"
       >
-        {$selectedProject ? $selectedProject.name : "Default"}
+        {$selectedProject ? $selectedProject.name : "None"}
       </div>
       {#if projects && projects.length > 0}
         <ul
