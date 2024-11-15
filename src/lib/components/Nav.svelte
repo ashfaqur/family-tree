@@ -17,10 +17,12 @@
 <div class="navbar bg-base-100 border-b-2">
   <div class="navbar-start">
     <a class="btn btn-ghost text-xl" href="/">
-      <div class="w-10 h-10">
-        <FamilyIcon />
-      </div></a
-    >
+      <img
+        class="w-10 h-10 rounded-full"
+        src="/family-tree-logo.jpeg"
+        alt="Family Tree Logo"
+      />
+    </a>
   </div>
 
   <div class="navbar-center z-30">

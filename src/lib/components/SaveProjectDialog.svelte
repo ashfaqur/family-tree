@@ -28,7 +28,7 @@
 
       <form on:submit|preventDefault={handleSave} class="space-y-6">
         <h3 class="font-bold text-lg">Save Project</h3>
-        <h4>Project name: {project.name}</h4>
+        <h4>{project.name}</h4>
         <div class="modal-action flex justify-between items-center">
           <button type="button" class="btn btn-ghost" on:click={handleClose}>
             Cancel
