@@ -9,7 +9,6 @@
   import EditProject from "$lib/components/EditProject.svelte";
   import SaveProjectDialog from "$lib/components/SaveProjectDialog.svelte";
   import data from "$lib/data/initialdata.json";
-  // import data from "$lib/data/private.json";
   import {
     setUserSelectedProjectId,
     getUserSelectedProjectId,
@@ -173,12 +172,7 @@
   }
 
   function exportTree() {
-    console.log("Exporting tree...");
-    // Your JSON data
-    const jsonData = $chartData;
-    // Convert JSON data to string
-    const jsonString = JSON.stringify(jsonData, null, 2);
-    // Open a new tab
+    const jsonString = JSON.stringify($chartData, null, 2);
     const newTab = window.open();
     // Print JSON data as raw text in the new tab
     newTab.document.open();
@@ -188,42 +182,47 @@
 </script>
 
 {#if $user}
-  <div class="flex flex-row justify-start items-center space-x-1 bg-base-100">
-    <h2 class="ml-1">Project:</h2>
-    <div class="dropdown" bind:this={dropdownElement}>
-      <div
-        tabindex="0"
-        role="button"
-        class="btn m-1 min-w-28 min-h-10 h-10 flex justify-start hover:bg-base-200"
-      >
-        {$selectedProject ? $selectedProject.name : "None"}
-      </div>
-      {#if projects && projects.length > 0}
-        <ul
+  <div class="flex flex-col sm:flex-row justify-start items-center bg-base-100">
+    <div class="flex flex-row justify-start items-center">
+      <h2 class="ml-1">Project:</h2>
+      <div class="dropdown" bind:this={dropdownElement}>
+        <div
           tabindex="0"
-          class="dropdown-content menu bg-base-100 rounded-box z-30 w-52 p-2 shadow"
+          role="button"
+          class="btn m-1 min-w-28 min-h-10 h-10 flex justify-start hover:bg-base-200"
         >
-          {#each projects as item}
-            <li>
-              <a on:click|preventDefault={() => selectItem(item)}>{item.name}</a
-              >
-            </li>
-          {/each}
-        </ul>
-      {/if}
+          {$selectedProject ? $selectedProject.name : "None"}
+        </div>
+        {#if projects && projects.length > 0}
+          <ul
+            tabindex="0"
+            class="dropdown-content menu bg-base-100 rounded-box z-30 w-52 p-2 shadow"
+          >
+            {#each projects as item}
+              <li>
+                <a on:click|preventDefault={() => selectItem(item)}
+                  >{item.name}</a
+                >
+              </li>
+            {/each}
+          </ul>
+        {/if}
+      </div>
     </div>
-    <ToolbarButton buttonAction={() => saveProject()}>
-      <SaveIcon />
-    </ToolbarButton>
-    <ToolbarButton buttonAction={() => openForm(true)}>
-      <EditIcon />
-    </ToolbarButton>
-    <ToolbarButton buttonAction={() => openForm(false)}>
-      <CreateIcon />
-    </ToolbarButton>
-    <ToolbarButton buttonAction={() => exportTree()}>
-      <ExportIcon />
-    </ToolbarButton>
+    <div class="flex flex-row space-x-1">
+      <ToolbarButton buttonAction={() => saveProject()}>
+        <SaveIcon />
+      </ToolbarButton>
+      <ToolbarButton buttonAction={() => openForm(true)}>
+        <EditIcon />
+      </ToolbarButton>
+      <ToolbarButton buttonAction={() => openForm(false)}>
+        <CreateIcon />
+      </ToolbarButton>
+      <ToolbarButton buttonAction={() => exportTree()}>
+        <ExportIcon />
+      </ToolbarButton>
+    </div>
   </div>
 
   <EditProject

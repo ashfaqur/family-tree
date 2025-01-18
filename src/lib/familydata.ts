@@ -11,7 +11,7 @@ import {
   where,
 } from "firebase/firestore";
 import data from "$lib/data/initialdata.json";
-// import data from "$lib/data/private.json";
+
 import type { FamilyMember, ProjectData, UserData } from "./types/types";
 
 export const selectedProject = writable<ProjectData>(null);
