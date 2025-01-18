@@ -4,6 +4,8 @@
   import EditIcon from "$lib/components/svg/EditIcon.svelte";
   import CreateIcon from "$lib/components/svg/CreateIcon.svelte";
   import SaveIcon from "$lib/components/svg/SaveIcon.svelte";
+  import ExportIcon from "$lib/components/svg/ExportIcon.svelte";
+  import ToolbarButton from "$lib/components/ToolbarButton.svelte";
   import EditProject from "$lib/components/EditProject.svelte";
   import SaveProjectDialog from "$lib/components/SaveProjectDialog.svelte";
   import data from "$lib/data/initialdata.json";
@@ -169,6 +171,20 @@
       chartData.set(data);
     }
   }
+
+  function exportTree() {
+    console.log("Exporting tree...");
+    // Your JSON data
+    const jsonData = $chartData;
+    // Convert JSON data to string
+    const jsonString = JSON.stringify(jsonData, null, 2);
+    // Open a new tab
+    const newTab = window.open();
+    // Print JSON data as raw text in the new tab
+    newTab.document.open();
+    newTab.document.write("<pre>" + jsonString + "</pre>");
+    newTab.document.close();
+  }
 </script>
 
 {#if $user}
@@ -178,7 +194,7 @@
       <div
         tabindex="0"
         role="button"
-        class="btn m-1 min-w-28 flex justify-start hover:bg-base-200"
+        class="btn m-1 min-w-28 min-h-10 h-10 flex justify-start hover:bg-base-200"
       >
         {$selectedProject ? $selectedProject.name : "None"}
       </div>
@@ -196,15 +212,18 @@
         </ul>
       {/if}
     </div>
-    <button class="btn min-h-10 h-10" on:click={() => saveProject()}
-      ><div class="w-6 h-6"><SaveIcon /></div>
-    </button>
-    <button class="btn min-h-10 h-10" on:click={() => openForm(true)}
-      ><div class="w-6 h-6"><EditIcon /></div>
-    </button>
-    <button class="btn min-h-10 h-10" on:click={() => openForm(false)}
-      ><div class="w-6 h-6"><CreateIcon /></div>
-    </button>
+    <ToolbarButton buttonAction={() => saveProject()}>
+      <SaveIcon />
+    </ToolbarButton>
+    <ToolbarButton buttonAction={() => openForm(true)}>
+      <EditIcon />
+    </ToolbarButton>
+    <ToolbarButton buttonAction={() => openForm(false)}>
+      <CreateIcon />
+    </ToolbarButton>
+    <ToolbarButton buttonAction={() => exportTree()}>
+      <ExportIcon />
+    </ToolbarButton>
   </div>
 
   <EditProject
