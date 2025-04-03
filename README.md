@@ -13,3 +13,10 @@ Signing in will allow you to save your tree.
 ## Animated Tree
 
 The website uses the wonderful animated family chart library, created by https://github.com/donatso/family-chart, for visualizing the family tree.
+
+
+## Development Setup
+
+Installation:
+
+    npm i

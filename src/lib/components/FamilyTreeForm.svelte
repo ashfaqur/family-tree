@@ -15,6 +15,7 @@
   let formData = {
     firstname: familyMember?.data?.firstname || "",
     lastname: familyMember?.data?.lastname || "",
+    nickname: familyMember?.data?.nickname || "",
     birthday: familyMember?.data?.birthday || "",
     gender: familyMember?.data?.gender || "M",
   };
@@ -27,6 +28,7 @@
     formData = {
       firstname: familyMember?.data?.firstname || "",
       lastname: familyMember?.data?.lastname || "",
+      nickname: familyMember?.data?.nickname || "",
       birthday: familyMember?.data?.birthday || "",
       gender: familyMember?.data?.gender || "M",
     };
@@ -52,7 +54,7 @@
       const parentId = addRelationMember.id;
       const familyMembers: FamilyMember[] = store.getData();
       const otherParent: FamilyMember = familyMembers.find(
-        (member: FamilyMember) => member.rels?.spouses?.includes(parentId)
+        (member: FamilyMember) => member.rels?.spouses?.includes(parentId),
       );
       if (otherParent) {
         if (!otherParent.rels.children) {
@@ -103,7 +105,7 @@
           label="First Name"
           placeholder="Enter first name"
           bind:value={formData.firstname}
-          maxLength={30}
+          maxLength={50}
           validateMaxLength={true}
           validateTextAllowedAlphabet={true}
         />
@@ -114,7 +116,18 @@
           label="Last Name"
           placeholder="Enter last name"
           bind:value={formData.lastname}
-          maxLength={30}
+          maxLength={50}
+          validateMaxLength={true}
+          validateTextAllowedAlphabet={true}
+        />
+
+        <!-- Last Name Input -->
+        <FormTextInput
+          id="nickname"
+          label="Nick Name"
+          placeholder="Enter nick name"
+          bind:value={formData.nickname}
+          maxLength={50}
           validateMaxLength={true}
           validateTextAllowedAlphabet={true}
         />

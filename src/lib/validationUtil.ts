@@ -21,7 +21,7 @@ export function validateTextLength(text: string, maxLength: number): string {
  */
 export function validateTextAlphabetCharacters(text: string): string {
   // Regular expression to match English and German alphabetical characters (including umlauts and ß)
-  const alphabetRegex = /^[A-Za-zÄäÖöÜüß]*$/;
+  const alphabetRegex = /^[A-Za-zÄäÖöÜüß\s]*$/;
   return !alphabetRegex.test(text)
     ? "Only alphabetical characters are allowed."
     : "";
