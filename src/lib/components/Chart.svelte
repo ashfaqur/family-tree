@@ -87,9 +87,9 @@
     };
 
     const d1: DisplayFunction = (item: CardNode) =>
-      `${item.data.firstname || ""} ${item.data.lastname || ""} ${nick(item)}`;
+      `${item.data.firstname || ""} ${item.data.lastname || ""}`;
     const d2: DisplayFunction = (item: CardNode) =>
-      `${item.data.birthday || ""}`;
+      `${nick(item)} ${item.data.birthday || ""}`;
 
     return [d1, d2];
   }
