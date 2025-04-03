@@ -79,21 +79,25 @@
   }
 
   function cardDisplay(): DisplayFunction[] {
+    const nick = (item: CardNode) => {
+      if (item.data.nickname) {
+        return `(${item.data.nickname})`;
+      }
+      return "";
+    };
+
     const d1: DisplayFunction = (item: CardNode) =>
-      `${item.data.firstname || ""} ${item.data.lastname || ""}`;
+      `${item.data.firstname || ""} ${item.data.lastname || ""} ${nick(item)}`;
     const d2: DisplayFunction = (item: CardNode) =>
       `${item.data.birthday || ""}`;
-
-    // d1.create_form = "{firstname} {lastname}";
-    // d2.create_form = "{birthday}";
 
     return [d1, d2];
   }
   const card_display: DisplayFunction[] = cardDisplay();
 
   const card_dim: CardDimensions = {
-    w: 220,
-    h: 70,
+    w: 230,
+    h: 80,
     text_x: 75,
     text_y: 15,
     img_w: 60,

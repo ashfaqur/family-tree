@@ -141,3 +141,5 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
 private.json
+
+.firebase

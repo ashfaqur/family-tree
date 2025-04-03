@@ -39,6 +39,7 @@ export interface CardEditParam {
 export interface FamilyMemberData {
   firstname?: string;
   lastname?: string;
+  nickname?: string;
   birthday?: string;
   bithplace?: string;
   death_date?: string;
